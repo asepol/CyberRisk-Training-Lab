@@ -1,0 +1,239 @@
+version: "3.9"
+
+networks:
+  frontend:
+    driver: bridge
+
+  backend:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.200.0.0/16
+
+  dmz:
+    driver: bridge
+
+volumes:
+  dashboard_data:
+  dvwa_data:
+  mysql_data:
+  elastic_data:
+  nextcloud_data:
+  minio_data:
+  grafana_data:
+  prometheus_data:
+  fluentbit_data:
+  wiki_data:
+  wiki_db_data:
+
+services:
+
+  fluent-bit:
+    image: docker.io/fluent/fluent-bit:2.1
+    container_name: fluent-bit
+    volumes:
+      - ../fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf:ro
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+    networks:
+      frontend:
+      dmz:
+      backend:
+        ipv4_address: 10.200.0.10
+    command: ["/fluent-bit/bin/fluent-bit", "-c", "/fluent-bit/etc/fluent-bit.conf"]
+
+  web-dashboard:
+    image: docker.io/library/nginx:alpine
+    container_name: web-dashboard
+    volumes:
+      - ../dashboard:/usr/share/nginx/html:ro
+    ports:
+      - "8080:80"
+    networks:
+      - frontend
+      - backend
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: 10.200.0.10:24224
+        tag: web-dashboard
+        fluentd-async-connect: "true"
+
+  dvwa:
+    image: docker.io/vulnerables/web-dvwa:latest
+    container_name: dvwa
+    ports:
+      - "8081:80"
+    networks:
+      - dmz
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: 10.200.0.10:24224
+        tag: dvwa
+        fluentd-async-connect: "true"
+
+  juice-shop:
+    image: docker.io/bkimminich/juice-shop
+    container_name: juice-shop
+    ports:
+      - "3005:3000"
+    networks:
+      - dmz
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: 10.200.0.10:24224
+        tag: juice-shop
+        fluentd-async-connect: "true"
+
+  mysql:
+    image: docker.io/library/mysql:5.7
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: dvwa
+      MYSQL_USER: dvwa
+      MYSQL_PASSWORD: dvwa
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - backend
+
+  elasticsearch:
+    image: docker.io/library/elasticsearch:7.17.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - network.host=0.0.0.0
+      - http.host=0.0.0.0
+      - transport.host=0.0.0.0
+    ports:
+      - "9200:9200"
+    volumes:
+      - elastic_data:/usr/share/elasticsearch/data
+    networks:
+      - backend
+
+  kibana:
+    image: docker.io/library/kibana:7.17.0
+    container_name: kibana
+    environment:
+      - server.host=0.0.0.0
+    ports:
+      - "5601:5601"
+    networks:
+      - backend
+    depends_on:
+      - elasticsearch
+
+  mailhog:
+    image: docker.io/mailhog/mailhog
+    container_name: mailhog
+    ports:
+      - "8025:8025"
+    networks:
+      - dmz
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: 10.200.0.10:24224
+        tag: mailhog
+        fluentd-async-connect: "true"
+
+  nextcloud:
+    image: docker.io/library/nextcloud
+    container_name: nextcloud
+    ports:
+      - "8082:80"
+    volumes:
+      - nextcloud_data:/var/www/html
+    networks:
+      - backend
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: 10.200.0.10:24224
+        tag: nextcloud
+        fluentd-async-connect: "true"
+
+  minio:
+    image: docker.io/minio/minio
+    container_name: minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: Admin123!
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - backend
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: 10.200.0.10:24224
+        tag: minio
+        fluentd-async-connect: "true"
+
+  prometheus:
+    image: docker.io/prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - prometheus_data:/prometheus
+    networks:
+      - backend
+
+  grafana:
+    image: docker.io/grafana/grafana
+    container_name: grafana
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - backend
+
+  wiki-db:
+    image: docker.io/library/postgres:14
+    container_name: wiki-db
+    environment:
+      POSTGRES_DB: wiki
+      POSTGRES_USER: wikijs
+      POSTGRES_PASSWORD: wikijs123
+    volumes:
+      - wiki_db_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  wiki:
+    image: docker.io/requarks/wiki:2
+    container_name: wiki
+    ports:
+      - "8083:3000"
+    environment:
+      DB_TYPE: postgres
+      DB_HOST: wiki-db
+      DB_PORT: 5432
+      DB_USER: wikijs
+      DB_PASS: wikijs123
+      DB_NAME: wiki
+    volumes:
+      - wiki_data:/var/wiki
+    networks:
+      - frontend
+      - backend
+    depends_on:
+      - wiki-db
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: 10.200.0.10:24224
+        tag: wiki
+        fluentd-async-connect: "true"

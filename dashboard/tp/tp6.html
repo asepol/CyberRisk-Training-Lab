@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>TP6 – PRA / PCA</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<h1>TP6 – PRA / PCA (Nextcloud + MinIO)</h1>
+
+<section>
+  <h2>Contexte</h2>
+  <p>Nextcloud tombe en panne. Vous devez restaurer les données à partir d’une sauvegarde MinIO.</p>
+</section>
+
+<section>
+  <h2>Objectifs</h2>
+  <ul>
+    <li>Comprendre PRA/PCA</li>
+    <li>Réaliser une sauvegarde</li>
+    <li>Restaurer un service</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Ressources</h2>
+  <ul>
+    <li><a href="http://IP_VM:8082">Nextcloud</a></li>
+    <li><a href="http://IP_VM:9001">MinIO Console</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tâches à réaliser</h2>
+  <ol>
+    <li>Uploader un fichier dans Nextcloud.</li>
+    <li>Sauvegarder <code>/var/www/html/data</code> dans MinIO.</li>
+    <li>Supprimer le fichier dans Nextcloud.</li>
+    <li>Restaurer depuis MinIO.</li>
+    <li>Vérifier la récupération.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Aide</h2>
+  <ul>
+    <li>Créer un bucket “nextcloud-backup”.</li>
+    <li>Utiliser l’interface MinIO pour uploader/télécharger.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Livrables</h2>
+  <p>Un rapport de reprise (étapes + preuves).</p>
+</section>
+
+</body>
+</html>

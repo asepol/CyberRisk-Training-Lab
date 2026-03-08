@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>TP2 – Analyse de Risques</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<h1>TP2 – Analyse de Risques</h1>
+
+<section>
+  <h2>Contexte</h2>
+  <p>DVWA est exposé en DMZ. Vous devez analyser les risques techniques liés à cette exposition.</p>
+</section>
+
+<section>
+  <h2>Objectifs</h2>
+  <ul>
+    <li>Identifier les vulnérabilités</li>
+    <li>Évaluer impacts et vraisemblances</li>
+    <li>Construire une matrice de risques</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Ressources</h2>
+  <ul>
+    <li><a href="http://IP_VM:8081">DVWA</a></li>
+    <li><a href="http://IP_VM:5601">Kibana</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tâches à réaliser</h2>
+  <ol>
+    <li>Accéder à DVWA et mettre le niveau sur “Low”.</li>
+    <li>Exploiter une vulnérabilité simple (SQLi, XSS).</li>
+    <li>Observer les logs dans Kibana.</li>
+    <li>Identifier les menaces (OWASP Top 10).</li>
+    <li>Construire une matrice (Impact × Probabilité).</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Aide</h2>
+  <ul>
+    <li>Dans Kibana, rechercher : <code>source.ip : "IP_ETUDIANT"</code></li>
+    <li>Consulter OWASP Top 10.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Livrables</h2>
+  <p>Une matrice de risques + analyse.</p>
+</section>
+
+</body>
+</html>

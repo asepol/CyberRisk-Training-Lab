@@ -1,0 +1,104 @@
+/* ================================
+   Thème global – Cyber Dark Mode
+   ================================ */
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0d1117;        /* Fond sombre type GitHub Dark */
+  color: #c9d1d9;             /* Texte gris clair */
+}
+
+/* ================================
+   Header
+   ================================ */
+
+header {
+  background: #161b22;        /* Bandeau sombre */
+  padding: 40px;
+  text-align: center;
+  border-bottom: 2px solid #30363d;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2.5em;
+  color: #58a6ff;             /* Bleu cyber */
+}
+
+header h2 {
+  margin: 10px 0 0;
+  font-size: 1.2em;
+  color: #8b949e;             /* Gris bleuté */
+}
+
+/* ================================
+   Navigation (liste des TP)
+   ================================ */
+
+nav {
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+nav li {
+  background: #21262d;        /* Bloc sombre */
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #30363d;
+  transition: 0.2s;
+}
+
+nav li:hover {
+  background: #30363d;        /* Survol plus clair */
+}
+
+/* ================================
+   Liens (Option 1 – Bleu cyber doux)
+   ================================ */
+
+nav a, section a {
+  color: #79c0ff;             /* Bleu cyber doux */
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+nav a:hover, section a:hover {
+  color: #a5d6ff;             /* Bleu clair au survol */
+  text-decoration: underline;
+}
+
+/* ================================
+   Sections des TP
+   ================================ */
+
+section {
+  background: #161b22;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 900px;
+  border-radius: 8px;
+  border: 1px solid #30363d;
+}
+
+h1, h2 {
+  color: #58a6ff;             /* Titres bleu cyber */
+}
+
+/* ================================
+   Footer
+   ================================ */
+
+footer {
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+  color: #8b949e;
+}
