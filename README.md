@@ -84,6 +84,7 @@ cd CyberRisk-Training-Lab### 🚀 Installation complète
 ```bash
 ./setup.sh
 
+---
 Ce script :
 - Démarre la stack Docker
 - Configure Prometheus / Grafana / Kibana
