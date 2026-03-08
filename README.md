@@ -89,6 +89,7 @@ Ce script :
 - Remplace automatiquement IP_VM dans les TP
 
 ## 🧩 4. Structure du dépôt
+```bash
 CyberRisk-Training-Lab/
 │
 ├── docker-lab/
@@ -115,7 +116,7 @@ CyberRisk-Training-Lab/
 ├── configure-dashboard.sh
 ├── setup.sh
 └── README.md
-
+```
 ## 🛠️ 5. Scripts inclus
 ✔ setup.sh --> Script principal : installe toute la plateforme.
 ✔ configure-dashboard.sh --> Remplace automatiquement IP_VM dans les TP HTML.
