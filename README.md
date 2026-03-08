@@ -123,15 +123,15 @@ CyberRisk-Training-Lab/
 
 ## 📚 6. Documentation pédagogique
 Wiki.js contient :
-- RGPD 🎯 Section “Futures Releases” formatée pour ton README
-- NIS2 🎯 Section “Futures Releases” formatée pour ton README
-- ISO 27001 🎯 Section “Futures Releases” formatée pour ton README
-- ISO 27002 🎯 Section “Futures Releases” formatée pour ton README
-- ISO 27005🎯 Section “Futures Releases” formatée pour ton README
-- MEHARI 🎯 Section “Futures Releases” formatée pour ton README
-- EBIOS RM 🎯 Section “Futures Releases” formatée pour ton README
-- Gestion des incidents 🎯 Section “Futures Releases” formatée pour ton README
-- PCA / PRA 🎯 Section “Futures Releases” formatée pour ton README
+- RGPD 
+- NIS2 
+- ISO 27001 
+- ISO 27002 
+- ISO 27005
+- MEHARI 
+- EBIOS RM 
+- Gestion des incidents 
+- PCA / PRA 
 A importer manuellement
 markdown
 ---
@@ -144,9 +144,6 @@ Plusieurs améliorations sont prévues pour les prochaines versions du CyberRisk
 Actuellement, les pages pédagogiques (ISO 27001, NIS2, RGPD, EBIOS RM, etc.) sont générées dans le dossier :
 
 wiki-content/
-
-Code
-
 Une future release ajoutera un **script d’automatisation** permettant :
 
 - d’importer automatiquement toutes les pages dans Wiki.js  
