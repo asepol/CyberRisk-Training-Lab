@@ -95,14 +95,18 @@ Clonez le dépôt :
 git clone https://github.com/asepol/CyberRisk-Training-Lab.git
 cd CyberRisk-Training-Lab
 ./setup.sh
+./config-infra.sh
+./Restore-wiki.sh
 
 ```
-Ce script :
+Ces scripts :
 - Démarre la stack Docker
 - Configure Prometheus / Grafana / Kibana
 - Génère les pages Wiki.js
 - Configure le dashboard
 - Remplace automatiquement IP_VM dans les TP
+- Configure les container lié au TP
+- Restore le wiki avec les pages (iso27001, EbiosRM, etc)
 
 ## 🧩 4. Structure du dépôt
 ```bash
