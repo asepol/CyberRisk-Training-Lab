@@ -95,7 +95,9 @@ Clonez le dépôt :
 git clone https://github.com/asepol/CyberRisk-Training-Lab.git
 cd CyberRisk-Training-Lab
 ./setup.sh
+cd CyberRisk-Training-Lab/docker-lab
 ./config-infra.sh
+cd CyberRisk-Training-Lab
 ./Restore-wiki.sh
 
 ```
