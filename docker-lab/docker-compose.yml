@@ -58,7 +58,7 @@ services:
       options:
         fluentd-address: 10.200.0.10:24224
         tag: web-dashboard
-        fluentd-async-connect: "true"
+        fluentd-async: "true"
 
   dvwa:
     image: docker.io/vulnerables/web-dvwa:latest
@@ -72,7 +72,7 @@ services:
       options:
         fluentd-address: 10.200.0.10:24224
         tag: dvwa
-        fluentd-async-connect: "true"
+        fluentd-async: "true"
 
   juice-shop:
     image: docker.io/bkimminich/juice-shop
@@ -86,7 +86,7 @@ services:
       options:
         fluentd-address: 10.200.0.10:24224
         tag: juice-shop
-        fluentd-async-connect: "true"
+        fluentd-async: "true"
 
   mysql:
     image: docker.io/library/mysql:5.7
@@ -141,7 +141,7 @@ services:
       options:
         fluentd-address: 10.200.0.10:24224
         tag: mailhog
-        fluentd-async-connect: "true"
+        fluentd-async: "true"
 
   nextcloud:
     image: docker.io/library/nextcloud
@@ -157,7 +157,7 @@ services:
       options:
         fluentd-address: 10.200.0.10:24224
         tag: nextcloud
-        fluentd-async-connect: "true"
+        fluentd-async: "true"
 
   minio:
     image: docker.io/minio/minio
@@ -178,7 +178,7 @@ services:
       options:
         fluentd-address: 10.200.0.10:24224
         tag: minio
-        fluentd-async-connect: "true"
+        fluentd-async: "true"
 
   prometheus:
     image: docker.io/prom/prometheus
@@ -236,4 +236,4 @@ services:
       options:
         fluentd-address: 10.200.0.10:24224
         tag: wiki
-        fluentd-async-connect: "true"
+        fluentd-async: "true"
