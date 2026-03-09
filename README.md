@@ -58,6 +58,22 @@ Après installation, les services sont accessibles via l’IP de la VM :
 | **Mailhog** | http://IP_VM:8025 |
 | **Elasticsearch API** | http://IP_VM:9200 |
 
+### 🔐 Comptes et mots de passe de la stack (environnement de lab)
+
+| Service        | URL                        | Identifiant / Login           | Mot de passe        | Remarques                          |
+|----------------|----------------------------|-------------------------------|---------------------|------------------------------------|
+| Dashboard TP   | http://IP_VM:8080          | –                             | –                   | Accès libre                        |
+| DVWA           | http://IP_VM:8081          | admin                         | password            | Identifiants par défaut DVWA       |
+| Juice Shop     | http://IP_VM:3005          | admin@juice-sh.op             | admin123            | Compte démo pour les TP            |
+| Nextcloud      | http://IP_VM:8082          | admin                         | admin123            | Créé lors de l’installation        |
+| Wiki.js        | http://IP_VM:8083          | admin@example.com             | admin123            | À changer après la première connexion |
+| MinIO Console  | http://IP_VM:9001          | minioadmin                    | minioadmin          | Identifiants par défaut MinIO      |
+| Mailhog        | http://IP_VM:8025          | –                             | –                   | Pas d’authentification             |
+| Grafana        | http://IP_VM:3001          | admin                         | admin               | Identifiants par défaut Grafana    |
+| Kibana         | http://IP_VM:5601          | elastic                       | changeme            | Si sécurité activée (à adapter)    |
+| Elasticsearch  | http://IP_VM:9200          | elastic                       | changeme            | Si sécurité activée (à adapter)    |
+| PostgreSQL     | interne (Wiki.js)          | wikijs                        | wikijs_pass         | Utilisé par Wiki.js                |
+| Prometheus     | http://IP_VM:9090 (si exposé) | –                          | –                   | Accès libre en lab                 |
 ---
 
 ## 📦 3. Installation
