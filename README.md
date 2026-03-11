@@ -88,8 +88,13 @@ Après installation, les services sont accessibles via l’IP de la VM :
 ---
 
 ### 🚀 Installation complète
+Prerequis
+```bash
+apt update
+apt install -y swaks
+```
 
-Clonez le dépôt :
+Clonez le dépôt 
 
 ```bash
 git clone https://github.com/asepol/CyberRisk-Training-Lab.git
