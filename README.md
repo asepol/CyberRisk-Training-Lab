@@ -67,7 +67,7 @@ Après installation, les services sont accessibles via l’IP de la VM :
 | Juice Shop     | http://IP_VM:3005          | admin@juice-sh.op             | admin123            | Compte démo pour les TP            |
 | Nextcloud      | http://IP_VM:8082          | admin                         | admin123            | Créé lors de l’installation        |
 | Wiki.js        | http://IP_VM:8083          | admin@example.com             | admin123            | À changer après la première connexion |
-| MinIO Console  | http://IP_VM:9001          | minioadmin                    | minioadmin          | Identifiants par défaut MinIO      |
+| MinIO Console  | http://IP_VM:9001          | admin                         | Admin123!           | Identifiants par défaut MinIO      |
 | Mailhog        | http://IP_VM:8025          | –                             | –                   | Pas d’authentification             |
 | Grafana        | http://IP_VM:3001          | admin                         | admin               | Identifiants par défaut Grafana    |
 | Kibana         | http://IP_VM:5601          | elastic                       | changeme            | Si sécurité activée (à adapter)    |
