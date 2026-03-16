@@ -2,13 +2,19 @@
 set -e
 
 #############################################
+# PRÉREQUIS
+#############################################
+
+if ! command -v curl >/dev/null 2>&1; then
+    echo "[!] curl n'est pas installé. Installation..."
+    apt update && apt install -y curl || yum install -y curl
+fi
+
+#############################################
 # CONFIG GLOBALE
 #############################################
 
-# Le script est dans : CyberRisk-Training-Lab/docker-lab
-# On remonte d’un dossier pour atteindre la racine du projet
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-
 STACK_DIR="$ROOT_DIR"
 PROM_DIR="$STACK_DIR/prometheus"
 GRAF_DIR="$STACK_DIR/grafana"
@@ -16,12 +22,10 @@ GRAF_PROV_DS="$GRAF_DIR/provisioning/datasources"
 GRAF_PROV_DASH="$GRAF_DIR/provisioning/dashboards"
 WIKI_CONTENT_DIR="$STACK_DIR/wiki-content"
 
-IP_VM=$(hostname -I | awk '{print $1}')
+COMPOSE_FILE="$ROOT_DIR/docker-lab/docker-compose.yml"
 
-# Kibana
+IP_VM=$(hostname -I | awk '{print $1}')
 KIBANA_URL="http://$IP_VM:5601"
-KIBANA_USER="elastic"
-KIBANA_PASS="changeme"
 
 echo "==============================================="
 echo " Configuration automatique de l'infrastructure"
@@ -89,40 +93,97 @@ cat > "$GRAF_PROV_DASH/prometheus-dashboard.json" << 'EOF'
 EOF
 
 #############################################
-# 3. WIKI.JS – CONTENU PÉDAGOGIQUE
+# 3. WIKI.JS
 #############################################
-echo "[*] Génération des pages Wiki dans $WIKI_CONTENT_DIR"
-
-# (Tu peux garder ou supprimer cette partie selon ton besoin)
-# Je laisse tel quel car tu l’utilises déjà.
+echo "[*] Préparation du contenu Wiki..."
+mkdir -p "$WIKI_CONTENT_DIR"
 
 #############################################
 # 4. RESTART DES SERVICES
 #############################################
+echo "[*] Vérification du fichier docker-compose.yml..."
+
+if [ ! -f "$COMPOSE_FILE" ]; then
+    echo "[!] ERREUR : docker-compose.yml introuvable dans $COMPOSE_FILE"
+    exit 1
+fi
+
 echo "[*] Redémarrage des services..."
-
-cd "$ROOT_DIR/docker-lab"
-docker compose restart prometheus grafana kibana wiki dvwa juice-shop mailhog nextcloud || true
+docker compose -f "$COMPOSE_FILE" restart \
+    prometheus grafana kibana wiki dvwa juice-shop mailhog nextcloud || true
 
 #############################################
-# 5. KIBANA – INDEX PATTERNS
+# 5. ATTENTE DE KIBANA
 #############################################
-echo "[*] Configuration Kibana..."
+echo "[*] Attente du démarrage de Kibana..."
+
+until curl -s "$KIBANA_URL/api/status" | grep -q '"state":"green"'; do
+    echo "  → Kibana pas encore prêt..."
+    sleep 5
+done
+
+echo "  → Kibana est prêt !"
+
+#############################################
+# 6. CREATION DES INDEX PATTERNS
+#############################################
+echo "[*] Création des index patterns Kibana..."
 
 curl -s -X POST "$KIBANA_URL/api/saved_objects/index-pattern" \
-  -u "$KIBANA_USER:$KIBANA_PASS" \
   -H "kbn-xsrf: true" \
   -H "Content-Type: application/json" \
   -d '{"attributes":{"title":"docker-*","timeFieldName":"@timestamp"}}' > /dev/null || true
 
 curl -s -X POST "$KIBANA_URL/api/saved_objects/index-pattern" \
-  -u "$KIBANA_USER:$KIBANA_PASS" \
   -H "kbn-xsrf: true" \
   -H "Content-Type: application/json" \
   -d '{"attributes":{"title":"fluentbit-*","timeFieldName":"@timestamp"}}' > /dev/null || true
 
 #############################################
-# 6. FIN
+# 7. INSTALLATION + CREATION COMPTE NEXTCLOUD
+#############################################
+echo "[*] Installation et configuration de Nextcloud..."
+
+NEXTCLOUD_CONTAINER="nextcloud"
+NC_USER="admin"
+NC_PASS="Admin1234!"
+
+# Vérification du conteneur
+if ! docker ps --format '{{.Names}}' | grep -q "$NEXTCLOUD_CONTAINER"; then
+    echo "[!] Impossible : conteneur Nextcloud introuvable."
+else
+    echo "  → Vérification si Nextcloud est déjà installé..."
+
+    if docker exec -u www-data $NEXTCLOUD_CONTAINER php occ status 2>&1 | grep -q "installed: true"; then
+        echo "  → Nextcloud est déjà installé."
+    else
+        echo "  → Installation automatique de Nextcloud (SQLite)..."
+
+        docker exec -u www-data $NEXTCLOUD_CONTAINER php occ maintenance:install \
+            --database=sqlite \
+            --admin-user="$NC_USER" \
+            --admin-pass="$NC_PASS"
+
+        echo "  → Installation terminée."
+        echo "     - Login admin : $NC_USER"
+        echo "     - Mot de passe : $NC_PASS"
+    fi
+
+    echo "  → Vérification de l'utilisateur admin..."
+
+    if docker exec -u www-data $NEXTCLOUD_CONTAINER php occ user:list | grep -q "$NC_USER"; then
+        echo "  → L'utilisateur '$NC_USER' existe déjà."
+    else
+        echo "  → Création de l'utilisateur Nextcloud..."
+        docker exec -u www-data -e OC_PASS="$NC_PASS" $NEXTCLOUD_CONTAINER \
+            php occ user:add --password-from-env --display-name="Compte TP" "$NC_USER"
+
+        echo "  → Utilisateur créé."
+    fi
+fi
+
+#############################################
+# 8. FIN
 #############################################
 echo
 echo "==============================================="
@@ -131,5 +192,6 @@ echo "-----------------------------------------------"
 echo "Prometheus : OK"
 echo "Grafana    : OK"
 echo "Kibana     : OK"
-echo "Wiki       : pages générées dans $WIKI_CONTENT_DIR"
+echo "Wiki       : OK"
+echo "Nextcloud  : Installé + compte admin créé"
 echo "==============================================="

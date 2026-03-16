@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>TP10 – Analyse d’emails avec Mailhog</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<h1>TP10 – Analyse et Exploitation d’une Messagerie Interne (Mailhog)</h1>
+
+<section>
+  <h2>Contexte</h2>
+  <p>
+    Vous êtes analyste cybersécurité dans une entreprise fictive. Plusieurs applications internes 
+    (DVWA, Nextcloud, Wiki.js, Juice Shop) envoient des emails via un serveur SMTP interne appelé 
+    <strong>Mailhog</strong>. Un employé a signalé avoir reçu un email suspect provenant du service informatique.
+  </p>
+  <p>Votre mission est d’enquêter sur les emails capturés par Mailhog.</p>
+</section>
+
+<section>
+  <h2>Objectifs</h2>
+  <ul>
+    <li>Comprendre le fonctionnement d’un serveur SMTP interne</li>
+    <li>Analyser des emails légitimes et frauduleux</li>
+    <li>Lire et interpréter les en‑têtes SMTP</li>
+    <li>Identifier un email de phishing</li>
+    <li>Comprendre les risques liés à la messagerie interne</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Ressources</h2>
+  <ul>
+    <li><a href="http://IP_VM:8025">Mailhog</a></li>
+    <li>Script : <code>config-email-tp.sh</code> (génère automatiquement les emails du TP)</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tâches à réaliser</h2>
+
+  <h3>1. Découverte de Mailhog</h3>
+  <ol>
+    <li>Accédez à l’interface Mailhog : <code>http://IP_VM:8025</code></li>
+    <li>Explorez :
+      <ul>
+        <li>Inbox</li>
+        <li>Contenu des emails</li>
+        <li>Onglet <strong>Raw</strong></li>
+        <li>Onglet <strong>Headers</strong></li>
+      </ul>
+    </li>
+  </ol>
+
+  <h4>Questions</h4>
+  <ul>
+    <li>Quel est le rôle de Mailhog dans l’infrastructure ?</li>
+    <li>Pourquoi utiliser un serveur SMTP interne ?</li>
+    <li>Quels ports Mailhog expose‑t‑il ?</li>
+  </ul>
+
+  <h3>2. Analyse des emails légitimes</h3>
+  <p>Le script a généré plusieurs emails :</p>
+  <ul>
+    <li>DVWA Security Alert</li>
+    <li>Nextcloud Password Reset</li>
+    <li>Wiki.js Invitation</li>
+    <li>Juice Shop Contact</li>
+  </ul>
+
+  <h4>Questions</h4>
+  <ul>
+    <li>Quel email provient d’une application de gestion de fichiers ?</li>
+    <li>Quel email correspond à une alerte de sécurité ?</li>
+    <li>Quel email est une invitation interne ?</li>
+    <li>Quel email provient d’un client externe ?</li>
+    <li>Quel champ dans les headers indique le serveur SMTP utilisé ?</li>
+  </ul>
+
+  <h3>3. Analyse d’un email frauduleux</h3>
+  <p>Un email suspect a été généré :</p>
+  <p><strong>Objet :</strong> URGENT – Mise à jour de sécurité</p>
+  <p><strong>Expéditeur :</strong> it-support@lab.local</p>
+
+  <h4>Questions</h4>
+  <ul>
+    <li>Pourquoi cet email est‑il suspect ?</li>
+    <li>Le lien contenu dans l’email est‑il légitime ?</li>
+    <li>L’expéditeur est‑il authentique ?</li>
+    <li>Quels indices dans les headers montrent une tentative de spoofing ?</li>
+    <li>Quel risque cet email représente‑t‑il pour l’entreprise ?</li>
+  </ul>
+
+  <h3>4. Investigation technique</h3>
+  <p>Dans l’onglet <strong>Headers</strong>, identifiez :</p>
+  <ul>
+    <li>Le champ <code>From</code></li>
+    <li>Le champ <code>Return‑Path</code></li>
+    <li>Le champ <code>Received</code></li>
+    <li>Le champ <code>Message‑ID</code></li>
+  </ul>
+
+  <h4>Questions</h4>
+  <ul>
+    <li>Le champ <code>From</code> correspond‑il au champ <code>Return‑Path</code> ?</li>
+    <li>Quel serveur a réellement envoyé l’email ?</li>
+    <li>Le message a‑t‑il transité par plusieurs serveurs ?</li>
+    <li>Le <code>Message‑ID</code> semble‑t‑il légitime ? Pourquoi ?</li>
+  </ul>
+
+  <h3>5. Génération d’un email malveillant (swaks)</h3>
+  <p>Envoyez un email malveillant simple :</p>
+
+  <pre><code>swaks --to victime@lab.local \
+      --from admin@lab.local \
+      --server IP_MAILHOG:1025 \
+      --header "Subject: Mise à jour obligatoire" \
+      --body "Veuillez installer la mise à jour : http://malware.lab.local"
+  </code></pre>
+
+  <h4>Questions</h4>
+  <ul>
+    <li>Votre email apparaît‑il dans Mailhog ?</li>
+    <li>Est‑il possible d’usurper un expéditeur interne ?</li>
+    <li>Pourquoi est‑ce dangereux ?</li>
+    <li>Comment une entreprise peut‑elle se protéger contre ce type d’attaque ?</li>
+  </ul>
+
+</section>
+
+<section>
+  <h2>Livrables</h2>
+  <ul>
+    <li>Analyse complète des emails légitimes</li>
+    <li>Analyse détaillée de l’email frauduleux</li>
+    <li>Captures d’écran des headers SMTP</li>
+    <li>Liste des anomalies détectées</li>
+    <li>Mesures de sécurité proposées (SPF, DKIM, DMARC, filtrage, sensibilisation)</li>
+  </ul>
+</section>
+
+</body>
+</html>
